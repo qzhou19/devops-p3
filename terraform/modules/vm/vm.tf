@@ -18,9 +18,11 @@ resource "azurerm_linux_virtual_machine" "test" {
   size                = "Standard_B1ls"
   admin_username      = "qzhou"
   network_interface_ids = ["${azurerm_network_interface.test.id}"]
+  disable_password_authentication = true
   admin_ssh_key {
     username   = "qzhou"
-    public_key = file("~/.ssh/id_rsa.pub")
+#     public_key = file("~/.ssh/id_rsa.pub")
+    public_key = tls_private_key.example_ssh.public_key_openssh
   }
   os_disk {
     caching           = "ReadWrite"
