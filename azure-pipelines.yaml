@@ -11,8 +11,7 @@ stages:
     # Needed for Terraform VM deployment
     - task: InstallSSHKey@0
       inputs:
-        knownHostsEntry: 'KNOWN_HOSTS_STRING'
-        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDPduqXrhKK7kOHubixvfMyCNzymE2osf0rLJnzigM7vIS/2mDFPPdbCmMwEu1VcntrulsrAswPFOgJFnc4Ll5d9lv83UXxVnPjw1I6/cLq0PoLE0Lw8t98X80PRjB5shOcH51Bfb34uPcA3OI6bv+zZ0JyXNQowB/FKHuvDyw71ZUfYkqP51QzTgwsMfIUUeRKmJKMYapEFz4UiKPIdgHM3Jqw6bi/3HiD8WtDlzIV533FeI4MpqruRPBD9Gvz/BFD5N+fulDWdN+JbD8HTTrJuDFE2Bd4PCMBPgTer7jzEEx3MP2DriTbw3wyxIDlwefjWPkeOlWuwe8T1riw0hUauV0nMLnVUolb11kl8T2WP4TwxgmS6TWHulU9XR/QTwA5HXkpzE72TMeVFTTACXeEFFBozoypHFb0rICAMSm46otEiu2yYz9SywjquSsatTy+Bn/545LB2BaLiFxttvfJD/73G9HbHqikUlKy+8bsnqHMrjKlbsvMZjZjKiskpCRmVvky8610RFEscXlvzH+fILx6NYYI4ahesl2KrKBaMwpt+MO3DslzJzfOOv/7UITkegA6mQBcBnvECNKe/XqklPA8LIkMdjyHRBF5PiEsFaWhTtJTEy72x/5GmVj65Ek3OuuxxExu3bidRfwCfqf/JkIqB9ngxonVJVkOLEV81Q== qian@cc-50e985af-5dbf9bc6b5-m8sk9'
+        knownHostsEntry: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
         sshKeySecureFile: 'id_rsa'
     - task: TerraformTaskV2@2
       inputs:
@@ -24,38 +23,39 @@ stages:
         backendAzureRmContainerName: 'qzcontainer1'
         backendAzureRmKey: 'terraform.tfstate'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-    - task: TerraformTaskV2@2
-      inputs:
-        provider: 'azurerm'
-        command: 'plan'
-        environmentServiceNameAzureRM: 'myazuresub'
-    - task: ArchiveFiles@2
-      displayName: 'Archive FakeRestAPI'
-      inputs:
-        rootFolderOrFile: 'fakerestapi'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-      displayName: 'Upload Package'
-      artifact: drop-fakerestapi
-- stage:
-  jobs:
-  - deployment: FakeRestAPI
-    pool:
-      vmImage: 'Ubuntu-16.04'
-    environment: 'TEST'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: 'myazuresub2'
-              appName: 'qzapp-AppService'
-              appType: webApp
-              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+        
+#     - task: TerraformTaskV2@2
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'plan'
+#         environmentServiceNameAzureRM: 'myazuresub'
+#     - task: ArchiveFiles@2
+#       displayName: 'Archive FakeRestAPI'
+#       inputs:
+#         rootFolderOrFile: 'fakerestapi'
+#         includeRootFolder: false
+#         archiveType: 'zip'
+#         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+#     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+#       displayName: 'Upload Package'
+#       artifact: drop-fakerestapi
+# - stage:
+#   jobs:
+#   - deployment: FakeRestAPI
+#     pool:
+#       vmImage: 'Ubuntu-16.04'
+#     environment: 'TEST'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: AzureWebApp@1
+#             displayName: 'Deploy Azure Web App'
+#             inputs:
+#               azureSubscription: 'myazuresub2'
+#               appName: 'qzapp-AppService'
+#               appType: webApp
+#               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
   # - deployment: VMDeploy
   #   displayName: NAME
   #   environment:
