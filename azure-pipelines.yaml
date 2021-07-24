@@ -32,6 +32,7 @@ stages:
         provider: 'azurerm'
         command: 'apply'
         environmentServiceNameAzureRM: 'myazuresub'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
     - task: TerraformTaskV2@2
       displayName: 'Terraform Destroy'
@@ -39,6 +40,7 @@ stages:
         provider: 'azurerm'
         command: 'destroy'
         environmentServiceNameAzureRM: 'myazuresub'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
 #     - task: ArchiveFiles@2
 #       displayName: 'Archive FakeRestAPI'
