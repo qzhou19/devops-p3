@@ -27,10 +27,17 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         
     - task: TerraformTaskV2@2
-      displayName: 'Terraform Plan'
+      displayName: 'Terraform Apply'
       inputs:
         provider: 'azurerm'
-        command: 'plan'
+        command: 'apply'
+        environmentServiceNameAzureRM: 'myazuresub'
+
+    - task: TerraformTaskV2@2
+      displayName: 'Terraform Destroy'
+      inputs:
+        provider: 'azurerm'
+        command: 'destroy'
         environmentServiceNameAzureRM: 'myazuresub'
 
 #     - task: ArchiveFiles@2
