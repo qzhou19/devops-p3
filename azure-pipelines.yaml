@@ -112,7 +112,7 @@ stages:
                 export PATH=$PATH:some/path
           - task: CmdLine@2
             inputs:
-              script: 'pip install selenium'
+              script: 'pip3 install selenium'
               
           # - task: PythonScript@0
           #   inputs:
