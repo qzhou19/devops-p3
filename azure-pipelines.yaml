@@ -107,9 +107,13 @@ stages:
                 sudo apt-get install python3-pip -y
                 sudo apt-get install unzip -y
                 sudo apt-get install -y chromium-browser
+                sudo apt-get install -y chromium
                 pip3 install selenium
                 export PATH=$PATH:some/path
-
+          - task: CmdLine@2
+            inputs:
+              script: 'pip install selenium'
+              
           # - task: PythonScript@0
           #   inputs:
           #     scriptSource: 'filePath'
