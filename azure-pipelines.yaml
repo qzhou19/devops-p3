@@ -14,25 +14,48 @@ stages:
       inputs:
         knownHostsEntry: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
         sshKeySecureFile: 'id_rsa'
-    - task: TerraformTaskV2@2
-      displayName: 'Terraform Init'
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        backendServiceArm: 'myazuresub'
-        backendAzureRmResourceGroupName: 'rg_default'
-        backendAzureRmStorageAccountName: 'qzstore1'
-        backendAzureRmContainerName: 'qzcontainer1'
-        backendAzureRmKey: 'terraform.tfstate'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         
-    - task: TerraformTaskV2@2
-      displayName: 'Terraform Apply'
+    - task: Bash@3
+      displayName: "Run Postman tests"
       inputs:
-        provider: 'azurerm'
-        command: 'apply'
-        environmentServiceNameAzureRM: 'myazuresub'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        targetType: "inline"
+        script: |
+          #! /bin/bash
+          # ------------- Install Dependencies -------------
+          sudo apt-get upgrade -y
+          sudo npm install -g newman reporter
+          # ------------- Run Postman tests -------------
+          echo "Clearing tests folder"
+          sudo rm -rf newman/*
+          echo "Running Regression tests ..."
+          newman run postman/Q3_regression_test.postman_collection.json -e postman/Q3.postman_environment.json --reporters cli,junit
+          echo "Running Data Validation tests ..."
+          newman run postman/Q3_data_validation_test.postman_collection.json -e postman/Q3.postman_environment.json --reporters cli,junit
+    - task: PublishTestResults@2
+      displayName: "Publish Test Results"
+      inputs:
+        testResultsFormat: "JUnit"
+        testResultsFiles: "newman/newman-*.xml"
+
+    # - task: TerraformTaskV2@2
+    #   displayName: 'Terraform Init'
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'init'
+    #     backendServiceArm: 'myazuresub'
+    #     backendAzureRmResourceGroupName: 'rg_default'
+    #     backendAzureRmStorageAccountName: 'qzstore1'
+    #     backendAzureRmContainerName: 'qzcontainer1'
+    #     backendAzureRmKey: 'terraform.tfstate'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        
+    # - task: TerraformTaskV2@2
+    #   displayName: 'Terraform Apply'
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'apply'
+    #     environmentServiceNameAzureRM: 'myazuresub'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
     # - task: TerraformTaskV2@2
     #   displayName: 'Terraform Destroy'
@@ -42,55 +65,55 @@ stages:
     #     environmentServiceNameAzureRM: 'myazuresub'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
-    - task: ArchiveFiles@2
-      displayName: 'Archive FakeRestAPI'
-      inputs:
-        rootFolderOrFile: 'fakerestapi'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-      displayName: 'Upload Package'
-      artifact: drop-fakerestapi
+    # - task: ArchiveFiles@2
+    #   displayName: 'Archive FakeRestAPI'
+    #   inputs:
+    #     rootFolderOrFile: 'fakerestapi'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+    #   displayName: 'Upload Package'
+    #   artifact: drop-fakerestapi
 
 - stage:
-  jobs:
-  - deployment: FakeRestAPI
-    pool:
-      vmImage: 'Ubuntu-16.04'
-    environment: 'TEST'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: 'myazuresub'
-              appName: 'qzapp-AppService'
-              appType: webApp
-              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
-  - deployment: VMDeploy
-    displayName: 'VM Deploy'
-    environment:
-      name:  'TEST'
-      resourceType: VirtualMachine
-      # tags: 'TEST'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                #! /bin/bash
+  # jobs:
+  # - deployment: FakeRestAPI
+  #   pool:
+  #     vmImage: 'Ubuntu-16.04'
+  #   environment: 'TEST'
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - task: AzureWebApp@1
+  #           displayName: 'Deploy Azure Web App'
+  #           inputs:
+  #             azureSubscription: 'myazuresub'
+  #             appName: 'qzapp-AppService'
+  #             appType: webApp
+  #             package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+  # - deployment: VMDeploy
+  #   displayName: 'VM Deploy'
+  #   environment:
+  #     name:  'TEST'
+  #     resourceType: VirtualMachine
+  #     # tags: 'TEST'
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - task: Bash@3
+  #           inputs:
+  #             targetType: 'inline'
+  #             script: |
+  #               #! /bin/bash
                 
-                sudo apt-get upgrade -y
-                sudo apt-get install python3-pip -y
-                sudo apt-get install unzip -y
-                sudo apt-get install -y chromium-browser
-                pip3 install selenium
-                export PATH=$PATH:some/path
+  #               sudo apt-get upgrade -y
+  #               sudo apt-get install python3-pip -y
+  #               sudo apt-get install unzip -y
+  #               sudo apt-get install -y chromium-browser
+  #               pip3 install selenium
+  #               export PATH=$PATH:some/path
 
 
