@@ -31,25 +31,25 @@ stages:
     #     environment: 'postman/Q3.postman_environment.json'
     #     reporters: 'cli'
 
-    - task: TerraformTaskV2@2
-      displayName: 'Terraform Init'
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        backendServiceArm: 'myazuresub'
-        backendAzureRmResourceGroupName: 'rg_default'
-        backendAzureRmStorageAccountName: 'qzstore1'
-        backendAzureRmContainerName: 'qzcontainer1'
-        backendAzureRmKey: 'terraform.tfstate'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+    # - task: TerraformTaskV2@2
+    #   displayName: 'Terraform Init'
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'init'
+    #     backendServiceArm: 'myazuresub'
+    #     backendAzureRmResourceGroupName: 'rg_default'
+    #     backendAzureRmStorageAccountName: 'qzstore1'
+    #     backendAzureRmContainerName: 'qzcontainer1'
+    #     backendAzureRmKey: 'terraform.tfstate'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         
-    - task: TerraformTaskV2@2
-      displayName: 'Terraform Apply'
-      inputs:
-        provider: 'azurerm'
-        command: 'apply'
-        environmentServiceNameAzureRM: 'myazuresub'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+    # - task: TerraformTaskV2@2
+    #   displayName: 'Terraform Apply'
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'apply'
+    #     environmentServiceNameAzureRM: 'myazuresub'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
     # - task: TerraformTaskV2@2
     #   displayName: 'Terraform Destroy'
