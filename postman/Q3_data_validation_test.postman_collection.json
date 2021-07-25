@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "47a54870-ff3a-48dc-8ff4-a55dfcf5f04a",
+		"name": "Q3_data_validation_test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get activities",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validation: Response inlcudes atleast one 'Title'\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Title\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Activities",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Activities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get actitivies by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validation: Response inlcudes requested id\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"id\"))});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Activities/{{id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Activities",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create activities",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validation: Response inlcudes created id\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"111\")});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"ID\": 111,\r\n  \"Title\": \"string\",\r\n  \"DueDate\": \"2021-07-25T17:58:22.148Z\",\r\n  \"Completed\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/Activities",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Activities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update created activities",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validation: Response inlcudes updated title\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"update-title\")});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"ID\": 111,\r\n  \"Title\": \"update-title\",\r\n  \"DueDate\": \"2021-07-25T17:58:22.148Z\",\r\n  \"Completed\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/Activities/111",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Activities",
+						"111"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
