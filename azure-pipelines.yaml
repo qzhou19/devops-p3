@@ -14,28 +14,13 @@ stages:
       inputs:
         knownHostsEntry: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
         sshKeySecureFile: 'id_rsa'
-        
-    - task: Bash@3
-      displayName: "Run Postman tests"
+    - task: NewmanPostman@4
       inputs:
-        targetType: "inline"
-        script: |
-          #! /bin/bash
-          # ------------- Install Dependencies -------------
-          sudo apt-get upgrade -y
-          sudo npm install -g newman reporter
-          # ------------- Run Postman tests -------------
-          echo "Clearing tests folder"
-          sudo rm -rf newman/*
-          echo "Running Regression tests ..."
-          newman run postman/Q3_regression_test.postman_collection.json -e postman/Q3.postman_environment.json --reporters cli,junit
-          echo "Running Data Validation tests ..."
-          newman run postman/Q3_data_validation_test.postman_collection.json -e postman/Q3.postman_environment.json --reporters cli,junit
-    - task: PublishTestResults@2
-      displayName: "Publish Test Results"
-      inputs:
-        testResultsFormat: "JUnit"
-        testResultsFiles: "newman/newman-*.xml"
+        collectionSourceType: 'file'
+        collectionFileSource: 'postman/'
+        Contents: '**/Q3_regression_test.postman_collection.json'
+        environment: 'postman/Q3.postman_environment.json'
+        reporters: 'cli'
 
     # - task: TerraformTaskV2@2
     #   displayName: 'Terraform Init'
@@ -65,18 +50,18 @@ stages:
     #     environmentServiceNameAzureRM: 'myazuresub'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
-    - task: ArchiveFiles@2
-      displayName: 'Archive FakeRestAPI'
-      inputs:
-        rootFolderOrFile: 'fakerestapi'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-      displayName: 'Upload Package'
-      artifact: drop-fakerestapi
+    # - task: ArchiveFiles@2
+    #   displayName: 'Archive FakeRestAPI'
+    #   inputs:
+    #     rootFolderOrFile: 'fakerestapi'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+    #   displayName: 'Upload Package'
+    #   artifact: drop-fakerestapi
 
-- stage:
+# - stage:
   # jobs:
   # - deployment: FakeRestAPI
   #   pool:
