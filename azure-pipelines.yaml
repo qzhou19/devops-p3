@@ -122,7 +122,9 @@ stages:
               scriptSource: 'inline'
               script: |
                 import os
-                os.getcwd()
+                print(os.getcwd())
+                os.chdir('/home/azureuser/azagent/_work/1/s')
+                print(os.getcwd())
                 
                 from selenium import webdriver
                 
