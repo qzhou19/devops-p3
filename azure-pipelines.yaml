@@ -100,6 +100,7 @@ stages:
           - task: Bash@3
             inputs:
               targetType: 'inline'
+              workingDirectory: $(System.DefaultWorkingDirectory)
               script: |
                 #! /bin/bash
                 
@@ -120,6 +121,7 @@ stages:
           - task: PythonScript@0
             inputs:
               scriptSource: 'inline'
+              workingDirectory: $(System.DefaultWorkingDirectory)
               script: |
                 import os
                 print(os.getcwd())
