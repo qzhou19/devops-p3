@@ -111,7 +111,7 @@ stages:
                 export PATH=$PATH:some/path
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
                 chromium-browser -version
-                chromedriver --version
+                pwd
               
           # - task: PythonScript@0
           #   inputs:
@@ -121,6 +121,9 @@ stages:
             inputs:
               scriptSource: 'inline'
               script: |
+                import os
+                os.getcwd()
+                
                 from selenium import webdriver
                 
                 url = "https://www.saucedemo.com/"
