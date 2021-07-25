@@ -74,7 +74,7 @@ stages:
   jobs:
   - deployment: FakeRestAPI
     pool:
-      vmImage: 'Ubuntu-16.04'
+      vmImage: 'Ubuntu-18.04'
     environment: 'TEST'
     strategy:
       runOnce:
@@ -107,7 +107,6 @@ stages:
                 sudo apt-get install python3-pip -y
                 sudo apt-get install unzip -y
                 sudo apt-get install -y chromium-browser
-                sudo snap install chromium
                 pip3 install selenium
                 export PATH=$PATH:some/path
               
