@@ -109,6 +109,9 @@ stages:
                 sudo apt-get install -y chromium-browser
                 pip3 install selenium
                 export PATH=$PATH:some/path
+                python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
+                chromium-browser -version
+                chromedriver --version
               
           # - task: PythonScript@0
           #   inputs:
