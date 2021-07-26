@@ -112,9 +112,12 @@ stages:
                 export PATH=$PATH:some/path
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
                 chromium-browser -version
+                wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+                unzip chromedriver_linux64.zip
+                sudo mv chromedriver /usr/bin/chromedriver
+                sudo chown root:root /usr/bin/chromedriver
+                sudo chmod +x /usr/bin/chromedriver
                 pwd
-                ls
-                sudo cp chromedriver /usr/bin/
                 python3 /home/azureuser/azagent/_work/1/s/Q3_v2.py
                 
           # - task: PythonScript@0
