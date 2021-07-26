@@ -113,6 +113,8 @@ stages:
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
                 chromium-browser -version
                 pwd
+                ls
+                sudo cp chromedriver /usr/bin/
                 python3 /home/azureuser/azagent/_work/1/s/Q3_v2.py
                 
           # - task: PythonScript@0
