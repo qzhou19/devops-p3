@@ -69,6 +69,28 @@ stages:
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
       displayName: 'Upload Package'
       artifact: drop-fakerestapi
+    - task: ArchiveFiles@2
+      displayName: 'Achive selenium files'
+      inputs:
+        rootFolderOrFile: 'selenium'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium.zip'
+        replaceExistingArchive: true
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium.zip
+      displayName: 'Upload selenium file'
+      artifact: drop-selenium
+    - task: ArchiveFiles@2
+      displayName: 'Achive jmeter files'
+      inputs:
+        rootFolderOrFile: 'jmeter'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip'
+        replaceExistingArchive: true
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip
+      displayName: 'Upload jmeter file'
+      artifact: drop-jmeter
 
 - stage:
   jobs:
@@ -141,10 +163,30 @@ stages:
                   sudo apt install default-jre -y
                 fi
 
-                pwd
-                ls
                 # python3 /home/azureuser/azagent/_work/1/s/Q3_v2.py
                 
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: "$(Pipeline.Workspace)/drop-project/$(Build.BuildId)-selenium.zip"
+              destinationFolder: "$(Pipeline.Workspace)/selenium"
+              cleanDestinationFolder: true
+              overwriteExistingFiles: true
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: "$(Pipeline.Workspace)/drop-project/$(Build.BuildId)-jmeter.zip"
+              destinationFolder: "$(Pipeline.Workspace)/jmeter"
+              cleanDestinationFolder: true
+              overwriteExistingFiles: true
+
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              workingDirectory: $(System.DefaultWorkingDirectory)
+              script: |
+                #! /bin/bash
+
+                pwd
+                ls
 
           # - task: PythonScript@0
           #   inputs:
