@@ -167,13 +167,13 @@ stages:
                 
           - task: ExtractFiles@1
             inputs:
-              archiveFilePatterns: "$(Pipeline.Workspace)/$(Build.BuildId)-selenium.zip"
+              archiveFilePatterns: "$(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium.zip"
               destinationFolder: "$(Pipeline.Workspace)/selenium"
               cleanDestinationFolder: true
               overwriteExistingFiles: true
           - task: ExtractFiles@1
             inputs:
-              archiveFilePatterns: "$(Pipeline.Workspace)/$(Build.BuildId)-jmeter.zip"
+              archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
               destinationFolder: "$(Pipeline.Workspace)/jmeter"
               cleanDestinationFolder: true
               overwriteExistingFiles: true
