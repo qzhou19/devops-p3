@@ -112,14 +112,40 @@ stages:
                 export PATH=$PATH:some/path
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
                 chromium-browser -version
-                # wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
-                # unzip chromedriver_linux64.zip
-                # sudo mv chromedriver /usr/bin/chromedriver
-                # sudo chown root:root /usr/bin/chromedriver
-                # sudo chmod +x /usr/bin/chromedriver
+
+                if test -f "/usr/bin/jmeter"
+                then
+                  echo 'Jmeter already installed'
+                else
+                  cd /home/azureuser/azgent/_work/1/s
+                  wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.tgz
+                  sudo ln -s /home/azureuser/azgent/_work/1/s/apache-jmeter-5.3/bin/jmeter /usr/bin/jmeter
+                  sudo rm -rf apache-jmeter-5.3.tgz
+                fi
+
+                if test -f "usr/bin/chromedriver"
+                then
+                  echo 'Chromedriver already installed'
+                else
+                  cd /home/azureuser/azgent/_work/1/s
+                  wget https://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip
+                  unzip chromedriver_linux64.zip
+                  sudo mv chromedriver -t /usr/bin
+                  rm -rf chromedriver_linux64.zip
+                fi
+
+                if test -f "usr/bin/java"
+                then
+                  echo "JRE already installed"
+                else
+                  sudo apt install default-jre -y
+                fi
+
                 pwd
-                python3 /home/azureuser/azagent/_work/1/s/Q3_v2.py
+                ls
+                # python3 /home/azureuser/azagent/_work/1/s/Q3_v2.py
                 
+
           # - task: PythonScript@0
           #   inputs:
           #     scriptSource: 'filePath'
