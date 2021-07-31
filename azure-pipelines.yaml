@@ -36,7 +36,7 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '**/TEST-*.xml'
+        testResultsFiles: 'newman/newman-*.xml'
         testRunTitle: 'Publish Test Results'
 
     # - task: TerraformTaskV2@2
@@ -144,29 +144,25 @@ stages:
                 chromium-browser -version
 
                 if test -f "/usr/bin/jmeter"
-                then
-                  echo 'Jmeter already installed'
+                then echo 'Jmeter already installed'
                 else
-                  wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.tgz
-                  sudo ln -s apache-jmeter-5.3/bin/jmeter /usr/bin/jmeter
-                  sudo rm -rf apache-jmeter-5.3.tgz
+                wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.tgz
+                sudo ln -s apache-jmeter-5.3/bin/jmeter /usr/bin/jmeter
+                sudo rm -rf apache-jmeter-5.3.tgz
                 fi
 
                 if test -f "usr/bin/chromedriver"
-                then
-                  echo 'Chromedriver already installed'
+                then echo 'Chromedriver already installed'
                 else
-                  wget https://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip
-                  unzip chromedriver_linux64.zip
-                  sudo mv chromedriver -t /usr/bin
-                  rm -rf chromedriver_linux64.zip
+                wget https://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip
+                unzip chromedriver_linux64.zip
+                sudo mv chromedriver -t /usr/bin
+                rm -rf chromedriver_linux64.zip
                 fi
 
                 if test -f "usr/bin/java"
-                then
-                  echo "JRE already installed"
-                else
-                  sudo apt install default-jre -y
+                then echo "JRE already installed"
+                else sudo apt install default-jre -y
                 fi
 
                 # python3 /home/azureuser/azagent/_work/1/s/Q3_v2.py
@@ -184,18 +180,18 @@ stages:
           #     cleanDestinationFolder: true
           #     overwriteExistingFiles: true
 
-          # - task: Bash@3
-          #   inputs:
-          #     targetType: 'inline'
-          #     workingDirectory: $(System.DefaultWorkingDirectory)
-          #     script: |
-          #       #! /bin/bash
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              workingDirectory: $(System.DefaultWorkingDirectory)
+              script: |
+                #! /bin/bash
 
-          #       cd /home/azureuser/azagent/_work/1/jmeter/
-          #       mkdir stress_test_html_report endurance_test_html_report
-          #       rm -rf *.csv stress_test_html_report/* endurance_test_html_report/*
-          #       jmeter -n -t Q3_Stress Test.jmx -l Q3_stress_test_results.csv -e -o stress_test_html_report/
-          #       jmeter -n -t Q3_Endurance Test.jmx -l Q3_endurance_test_results.csv -e -o endurance_test_html_report/
+                cd /home/azureuser/azagent/_work/1/jmeter/
+                mkdir stress_test_html_report endurance_test_html_report
+                rm -rf *.csv stress_test_html_report/* endurance_test_html_report/*
+                jmeter -n -t Q3_Stress Test.jmx -l Q3_stress_test_results.csv -e -o stress_test_html_report/
+                jmeter -n -t Q3_Endurance Test.jmx -l Q3_endurance_test_results.csv -e -o endurance_test_html_report/
 
 
           # - task: PythonScript@0
