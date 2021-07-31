@@ -128,7 +128,7 @@ stages:
         deploy:
           steps:
           - task: Bash@3
-            displayName: 'Insatll Packages'
+            displayName: 'Insatll and Check Packages'
             inputs:
               targetType: 'inline'
               workingDirectory: $(System.DefaultWorkingDirectory)
@@ -145,28 +145,7 @@ stages:
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
                 chromium-browser -version
                 chromedriver -version
-                jmeter -version
-
-                # if test -f "/usr/bin/jmeter"
-                # then echo 'Jmeter already installed'
-                # else
-                # wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.tgz
-                # sudo ln -s apache-jmeter-5.3/bin/jmeter /usr/bin/jmeter
-                # sudo rm -rf apache-jmeter-5.3.tgz
-                # fi
-
-                # if test -f "usr/bin/chromedriver"
-                # then
-                #   echo 'Chromedriver already installed'
-                # else
-                #   echo 'Chromedriver not installed, install now'
-                #   wget https://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip
-                #   unzip chromedriver_linux64.zip
-                #   sudo mv chromedriver -t /usr/bin
-                #   rm -rf chromedriver_linux64.zip
-                # fi
-
-                # python3 /home/azureuser/azagent/_work/1/s/Q3_v2.py
+                jmeter -v
                 
           # - task: ExtractFiles@1
           #   inputs:
