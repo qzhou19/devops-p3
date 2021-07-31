@@ -14,22 +14,27 @@ stages:
       inputs:
         knownHostsEntry: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
         sshKeySecureFile: 'id_rsa'
-    # - task: NewmanPostman@4
-    #   displayName: 'Postman Regression Test'
-    #   inputs:
-    #     collectionSourceType: 'file'
-    #     collectionFileSource: 'postman/'
-    #     Contents: '**/Q3_regression_test.postman_collection.json'
-    #     environment: 'postman/Q3.postman_environment.json'
-    #     reporters: 'cli'
-    # - task: NewmanPostman@4
-    #   displayName: 'Postman Validation Test'
-    #   inputs:
-    #     collectionSourceType: 'file'
-    #     collectionFileSource: 'postman/'
-    #     Contents: '**/Q3_data_validation_test.postman_collection.json'
-    #     environment: 'postman/Q3.postman_environment.json'
-    #     reporters: 'cli'
+    - task: NewmanPostman@4
+      displayName: 'Postman Regression Test'
+      inputs:
+        collectionSourceType: 'file'
+        collectionFileSource: 'postman/'
+        Contents: '**/Q3_regression_test.postman_collection.json'
+        environment: 'postman/Q3.postman_environment.json'
+        reporters: 'cli,junit'
+    - task: NewmanPostman@4
+      displayName: 'Postman Validation Test'
+      inputs:
+        collectionSourceType: 'file'
+        collectionFileSource: 'postman/'
+        Contents: '**/Q3_data_validation_test.postman_collection.json'
+        environment: 'postman/Q3.postman_environment.json'
+        reporters: 'cli, junit'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
+        testRunTitle: 'Publish Test Results'
 
     # - task: TerraformTaskV2@2
     #   displayName: 'Terraform Init'
@@ -185,8 +190,12 @@ stages:
               script: |
                 #! /bin/bash
 
-                pwd
-                ls
+                cd /home/azureuser/azagent/_work/1/jmeter/
+                mkdir stress_test_html_report endurance_test_html_report
+                rm -rf *.csv stress_test_html_report/* endurance_test_html_report/*
+                jmeter -n -t Q3_Stress Test.jmx -l Q3_stress_test_results.csv -e -o stress_test_html_report/
+                jmeter -n -t Q3_Endurance Test.jmx -l Q3_endurance_test_results.csv -e -o endurance_test_html_report/
+
 
           # - task: PythonScript@0
           #   inputs:
