@@ -144,6 +144,7 @@ stages:
                 export PATH=$PATH:some/path
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
                 chromium-browser -version
+                chromedriver -version
                 jmeter -version
 
                 # if test -f "/usr/bin/jmeter"
@@ -154,16 +155,16 @@ stages:
                 # sudo rm -rf apache-jmeter-5.3.tgz
                 # fi
 
-                if test -f "usr/bin/chromedriver"
-                then
-                  echo 'Chromedriver already installed'
-                else
-                  echo 'Chromedriver not installed, install now'
-                  wget https://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip
-                  unzip chromedriver_linux64.zip
-                  sudo mv chromedriver -t /usr/bin
-                  rm -rf chromedriver_linux64.zip
-                fi
+                # if test -f "usr/bin/chromedriver"
+                # then
+                #   echo 'Chromedriver already installed'
+                # else
+                #   echo 'Chromedriver not installed, install now'
+                #   wget https://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip
+                #   unzip chromedriver_linux64.zip
+                #   sudo mv chromedriver -t /usr/bin
+                #   rm -rf chromedriver_linux64.zip
+                # fi
 
                 # python3 /home/azureuser/azagent/_work/1/s/Q3_v2.py
                 
