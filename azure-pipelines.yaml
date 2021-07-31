@@ -190,5 +190,5 @@ stages:
                 cd /home/azureuser/azagent/_work/1/jmeter/
                 mkdir stress_test_html_report endurance_test_html_report
                 rm -rf *.csv stress_test_html_report/* endurance_test_html_report/*
-                jmeter -n -t Q3_Stress Test.jmx -l Q3_stress_test_results.csv
-                jmeter -n -t Q3_Endurance Test.jmx -l Q3_endurance_test_results.csv
+                jmeter -n -t Q3_Stress\ Test.jmx -l Q3_stress_test_results.csv
+                jmeter -n -t Q3_Endurance\ Test.jmx -l Q3_endurance_test_results.csv
