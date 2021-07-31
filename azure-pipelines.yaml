@@ -14,6 +14,9 @@ stages:
       inputs:
         knownHostsEntry: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
         sshKeySecureFile: 'id_rsa'
+    - task: Npm@1
+      inputs:
+        command: 'install'
     - task: NewmanPostman@4
       displayName: 'Postman Regression Test'
       inputs:
@@ -144,9 +147,8 @@ stages:
                 then
                   echo 'Jmeter already installed'
                 else
-                  cd /home/azureuser/azgent/_work/1/s
                   wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.tgz
-                  sudo ln -s /home/azureuser/azgent/_work/1/s/apache-jmeter-5.3/bin/jmeter /usr/bin/jmeter
+                  sudo ln -s apache-jmeter-5.3/bin/jmeter /usr/bin/jmeter
                   sudo rm -rf apache-jmeter-5.3.tgz
                 fi
 
@@ -154,7 +156,6 @@ stages:
                 then
                   echo 'Chromedriver already installed'
                 else
-                  cd /home/azureuser/azgent/_work/1/s
                   wget https://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip
                   unzip chromedriver_linux64.zip
                   sudo mv chromedriver -t /usr/bin
@@ -170,31 +171,31 @@ stages:
 
                 # python3 /home/azureuser/azagent/_work/1/s/Q3_v2.py
                 
-          - task: ExtractFiles@1
-            inputs:
-              archiveFilePatterns: "$(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium.zip"
-              destinationFolder: "$(Pipeline.Workspace)/selenium"
-              cleanDestinationFolder: true
-              overwriteExistingFiles: true
-          - task: ExtractFiles@1
-            inputs:
-              archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
-              destinationFolder: "$(Pipeline.Workspace)/jmeter"
-              cleanDestinationFolder: true
-              overwriteExistingFiles: true
+          # - task: ExtractFiles@1
+          #   inputs:
+          #     archiveFilePatterns: "$(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium.zip"
+          #     destinationFolder: "$(Pipeline.Workspace)/selenium"
+          #     cleanDestinationFolder: true
+          #     overwriteExistingFiles: true
+          # - task: ExtractFiles@1
+          #   inputs:
+          #     archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
+          #     destinationFolder: "$(Pipeline.Workspace)/jmeter"
+          #     cleanDestinationFolder: true
+          #     overwriteExistingFiles: true
 
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              workingDirectory: $(System.DefaultWorkingDirectory)
-              script: |
-                #! /bin/bash
+          # - task: Bash@3
+          #   inputs:
+          #     targetType: 'inline'
+          #     workingDirectory: $(System.DefaultWorkingDirectory)
+          #     script: |
+          #       #! /bin/bash
 
-                cd /home/azureuser/azagent/_work/1/jmeter/
-                mkdir stress_test_html_report endurance_test_html_report
-                rm -rf *.csv stress_test_html_report/* endurance_test_html_report/*
-                jmeter -n -t Q3_Stress Test.jmx -l Q3_stress_test_results.csv -e -o stress_test_html_report/
-                jmeter -n -t Q3_Endurance Test.jmx -l Q3_endurance_test_results.csv -e -o endurance_test_html_report/
+          #       cd /home/azureuser/azagent/_work/1/jmeter/
+          #       mkdir stress_test_html_report endurance_test_html_report
+          #       rm -rf *.csv stress_test_html_report/* endurance_test_html_report/*
+          #       jmeter -n -t Q3_Stress Test.jmx -l Q3_stress_test_results.csv -e -o stress_test_html_report/
+          #       jmeter -n -t Q3_Endurance Test.jmx -l Q3_endurance_test_results.csv -e -o endurance_test_html_report/
 
 
           # - task: PythonScript@0
