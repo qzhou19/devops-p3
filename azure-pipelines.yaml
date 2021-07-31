@@ -159,26 +159,26 @@ stages:
           #     destinationFolder: "$(Pipeline.Workspace)/jmeter"
           #     cleanDestinationFolder: true
           #     overwriteExistingFiles: true
-          - task: Bash@3
-            displayName: 'Selenium Test'
-            inputs:
-              targetType: 'inline'
-              workingDirectory: $(System.DefaultWorkingDirectory)
-              script: |
-                #! /bin/bash
+          # - task: Bash@3
+          #   displayName: 'Selenium Test'
+          #   inputs:
+          #     targetType: 'inline'
+          #     workingDirectory: $(System.DefaultWorkingDirectory)
+          #     script: |
+          #       #! /bin/bash
 
-                cd /home/azureuser/azagent/_work/1/selenium/
-                if test -f '/var/logs/selenium/selenium_log.txt'
-                then
-                  sudo chmod 777 /var/logs/selenium/selenium_log.txt
-                  python3 Q3_v2.py
-                else
-                  sudo mkdir -p /var/logs/selenium
-                  sudo touch /var/logs/selenium/selenium_log.txt
-                  sudo chmod 775 -R /var/logs
-                  sudo chmod 777 /var/logs/selenium/selenium_log.txt
-                  python3 Q3_v2.py
-                fi
+          #       cd /home/azureuser/azagent/_work/1/selenium/
+          #       if test -f '/var/logs/selenium/selenium_log.txt'
+          #       then
+          #         sudo chmod 777 /var/logs/selenium/selenium_log.txt
+          #         python3 Q3_v2.py
+          #       else
+          #         sudo mkdir -p /var/logs/selenium
+          #         sudo touch /var/logs/selenium/selenium_log.txt
+          #         sudo chmod 775 -R /var/logs
+          #         sudo chmod 777 /var/logs/selenium/selenium_log.txt
+          #         python3 Q3_v2.py
+          #       fi
           - task: Bash@3
             displayName: 'Jmeter Test'
             inputs:
