@@ -128,6 +128,7 @@ stages:
         deploy:
           steps:
           - task: Bash@3
+            displayName: 'Insatll Packages'
             inputs:
               targetType: 'inline'
               workingDirectory: $(System.DefaultWorkingDirectory)
@@ -179,8 +180,28 @@ stages:
           #     destinationFolder: "$(Pipeline.Workspace)/jmeter"
           #     cleanDestinationFolder: true
           #     overwriteExistingFiles: true
-
           - task: Bash@3
+            displayName: 'Selenium Test'
+            inputs:
+              targetType: 'inline'
+              workingDirectory: $(System.DefaultWorkingDirectory)
+              script: |
+                #! /bin/bash
+
+                cd /home/azureuser/azagent/_work/1/selenium/
+                if test -f '/var/logs/selenium/selenium_log.txt'
+                then
+                  sudo chmod 777 /var/logs/selenium/selenium_log.txt
+                  python3 Q3_v2.py
+                else
+                  sudo mkdir -p /var/logs/selenium
+                  sudo touch /var/logs/selenium/selenium_log.txt
+                  sudo chmod 775 -R /var/logs
+                  sudo chmod 777 /var/logs/selenium/selenium_log.txt
+                  python3 Q3_v2.py
+                fi
+          - task: Bash@3
+            displayName: 'Jmeter Test'
             inputs:
               targetType: 'inline'
               workingDirectory: $(System.DefaultWorkingDirectory)
@@ -190,5 +211,5 @@ stages:
                 cd /home/azureuser/azagent/_work/1/jmeter/
                 mkdir stress_test_html_report endurance_test_html_report
                 rm -rf *.csv stress_test_html_report/* endurance_test_html_report/*
-                jmeter -n -t Q3_Stress Test.jmx -l Q3_stress_test_results.csv -e -o stress_test_html_report/
-                jmeter -n -t Q3_Endurance Test.jmx -l Q3_endurance_test_results.csv -e -o endurance_test_html_report/
+                jmeter -n -t Q3_Stress Test.jmx -l Q3_stress_test_results.csv
+                jmeter -n -t Q3_Endurance Test.jmx -l Q3_endurance_test_results.csv
