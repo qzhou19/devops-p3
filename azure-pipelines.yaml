@@ -14,30 +14,30 @@ stages:
       inputs:
         knownHostsEntry: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
         sshKeySecureFile: 'id_rsa'
-    - task: Npm@1
-      inputs:
-        command: 'install'
-    - task: NewmanPostman@4
-      displayName: 'Postman Regression Test'
-      inputs:
-        collectionSourceType: 'file'
-        collectionFileSource: 'postman/'
-        Contents: '**/Q3_regression_test.postman_collection.json'
-        environment: 'postman/Q3.postman_environment.json'
-        reporters: 'cli,junit'
-    - task: NewmanPostman@4
-      displayName: 'Postman Validation Test'
-      inputs:
-        collectionSourceType: 'file'
-        collectionFileSource: 'postman/'
-        Contents: '**/Q3_data_validation_test.postman_collection.json'
-        environment: 'postman/Q3.postman_environment.json'
-        reporters: 'cli, junit'
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: 'newman/newman-*.xml'
-        testRunTitle: 'Publish Test Results'
+    # - task: Npm@1
+    #   inputs:
+    #     command: 'install'
+    # - task: NewmanPostman@4
+    #   displayName: 'Postman Regression Test'
+    #   inputs:
+    #     collectionSourceType: 'file'
+    #     collectionFileSource: 'postman/'
+    #     Contents: '**/Q3_regression_test.postman_collection.json'
+    #     environment: 'postman/Q3.postman_environment.json'
+    #     reporters: 'cli,junit'
+    # - task: NewmanPostman@4
+    #   displayName: 'Postman Validation Test'
+    #   inputs:
+    #     collectionSourceType: 'file'
+    #     collectionFileSource: 'postman/'
+    #     Contents: '**/Q3_data_validation_test.postman_collection.json'
+    #     environment: 'postman/Q3.postman_environment.json'
+    #     reporters: 'cli, junit'
+    # - task: PublishTestResults@2
+    #   inputs:
+    #     testResultsFormat: 'JUnit'
+    #     testResultsFiles: 'newman/newman-*.xml'
+    #     testRunTitle: 'Publish Test Results'
 
     # - task: TerraformTaskV2@2
     #   displayName: 'Terraform Init'
@@ -138,31 +138,31 @@ stages:
                 sudo apt-get install python3-pip -y
                 sudo apt-get install unzip -y
                 sudo apt-get install -y chromium-browser
+                sudo apt install default-jre -y
+                sudo apt install jmeter
                 pip3 install selenium
                 export PATH=$PATH:some/path
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
                 chromium-browser -version
+                jmeter -version
 
-                if test -f "/usr/bin/jmeter"
-                then echo 'Jmeter already installed'
-                else
-                wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.tgz
-                sudo ln -s apache-jmeter-5.3/bin/jmeter /usr/bin/jmeter
-                sudo rm -rf apache-jmeter-5.3.tgz
-                fi
+                # if test -f "/usr/bin/jmeter"
+                # then echo 'Jmeter already installed'
+                # else
+                # wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.tgz
+                # sudo ln -s apache-jmeter-5.3/bin/jmeter /usr/bin/jmeter
+                # sudo rm -rf apache-jmeter-5.3.tgz
+                # fi
 
                 if test -f "usr/bin/chromedriver"
-                then echo 'Chromedriver already installed'
+                then
+                  echo 'Chromedriver already installed'
                 else
-                wget https://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip
-                unzip chromedriver_linux64.zip
-                sudo mv chromedriver -t /usr/bin
-                rm -rf chromedriver_linux64.zip
-                fi
-
-                if test -f "usr/bin/java"
-                then echo "JRE already installed"
-                else sudo apt install default-jre -y
+                  echo 'Chromedriver not installed, install now'
+                  wget https://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip
+                  unzip chromedriver_linux64.zip
+                  sudo mv chromedriver -t /usr/bin
+                  rm -rf chromedriver_linux64.zip
                 fi
 
                 # python3 /home/azureuser/azagent/_work/1/s/Q3_v2.py
