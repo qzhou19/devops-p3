@@ -127,13 +127,13 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: TaurusInstaller@0
-            inputs:
-              taurusVersion: '1.15.3'
-              pythonCommand: 'python3'
-          - task: JMeterInstaller@0
-            inputs:
-              jmeterVersion: '5.4.1'
+          # - task: TaurusInstaller@0
+          #   inputs:
+          #     taurusVersion: '1.15.3'
+          #     pythonCommand: 'python3'
+          # - task: JMeterInstaller@0
+          #   inputs:
+          #     jmeterVersion: '5.4.1'
           # - task: Bash@3
           #   displayName: 'Insatll and Check Packages'
           #   inputs:
@@ -186,14 +186,14 @@ stages:
           #         sudo chmod 777 /var/logs/selenium/selenium_log.txt
           #         python3 Q3_v2.py
           #       fi
-          # - task: Bash@3
-          #   displayName: 'Jmeter Test'
-          #   inputs:
-          #     targetType: 'inline'
-          #     workingDirectory: $(System.DefaultWorkingDirectory)
-          #     script: |
-          #       #! /bin/bash
+          - task: Bash@3
+            displayName: 'Jmeter Test'
+            inputs:
+              targetType: 'inline'
+              workingDirectory: $(System.DefaultWorkingDirectory)
+              script: |
+                #! /bin/bash
 
-          #       cd /home/azureuser/azagent/_work/1/jmeter/apache-jmeter-5.4.1/bin
-          #       ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Stress_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_stress_test_results.csv
-          #       ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Endurance_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_endurance_test_results.csv
+                cd /home/azureuser/azagent/_work/1/jmeter/apache-jmeter-5.4.1/bin
+                ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Stress_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Stress_test_results.csv
+                ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Endurance_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Endurance_test_results.csv
