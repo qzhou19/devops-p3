@@ -175,17 +175,8 @@ stages:
                 #! /bin/bash
 
                 cd /home/azureuser/azagent/_work/1/selenium/
-                if test -f '/var/logs/selenium/selenium_log.txt'
-                then
-                  sudo chmod 777 /var/logs/selenium/selenium_log.txt
-                  python3 Q3_v3.py
-                else
-                  sudo mkdir -p /var/logs/selenium
-                  sudo touch /var/logs/selenium/selenium_log.txt
-                  sudo chmod 775 -R /var/logs
-                  sudo chmod 777 /var/logs/selenium/selenium_log.txt
-                  python3 Q3_v3.py
-                fi
+                python3 Q3_v3.py
+
           # - task: Bash@3
           #   displayName: 'Jmeter Test'
           #   inputs:
