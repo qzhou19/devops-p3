@@ -188,5 +188,5 @@ stages:
                 #! /bin/bash
 
                 cd /home/azureuser/azagent/_work/1/jmeter/apache-jmeter-5.4.1/bin
-                ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Q3_Stress_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_stress_test_results.csv
-                ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Q3_Endurance_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_endurance_test_results.csv
+                ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Stress_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_stress_test_results.csv
+                ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Endurance_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_endurance_test_results.csv
