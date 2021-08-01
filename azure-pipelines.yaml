@@ -67,16 +67,16 @@ stages:
     #     environmentServiceNameAzureRM: 'myazuresub'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
-    - task: ArchiveFiles@2
-      displayName: 'Archive FakeRestAPI'
-      inputs:
-        rootFolderOrFile: 'fakerestapi'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-      displayName: 'Upload Package'
-      artifact: drop-fakerestapi
+    # - task: ArchiveFiles@2
+    #   displayName: 'Archive FakeRestAPI'
+    #   inputs:
+    #     rootFolderOrFile: 'fakerestapi'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+    #   displayName: 'Upload Package'
+    #   artifact: drop-fakerestapi
     # - task: ArchiveFiles@2
     #   displayName: 'Achive selenium files'
     #   inputs:
@@ -110,13 +110,13 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: 'myazuresub'
-              appName: 'qzapp-AppService'
-              appType: webApp
-              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+          # - task: AzureWebApp@1
+          #   displayName: 'Deploy Azure Web App'
+          #   inputs:
+          #     azureSubscription: 'myazuresub'
+          #     appName: 'qzapp-AppService'
+          #     appType: webApp
+          #     package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
   - deployment: VMDeploy
     displayName: 'VM Deploy'
     environment:
@@ -127,25 +127,28 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: Bash@3
-            displayName: 'Insatll and Check Packages'
+          - task: JMeterInstaller@0
             inputs:
-              targetType: 'inline'
-              workingDirectory: $(System.DefaultWorkingDirectory)
-              script: |
-                #! /bin/bash
+              jmeterVersion: '5.4.1'
+          # - task: Bash@3
+          #   displayName: 'Insatll and Check Packages'
+          #   inputs:
+          #     targetType: 'inline'
+          #     workingDirectory: $(System.DefaultWorkingDirectory)
+          #     script: |
+          #       #! /bin/bash
                 
-                sudo apt-get upgrade -y
-                sudo apt-get install python3-pip -y
-                sudo apt-get install unzip -y
-                sudo apt-get install -y chromium-browser
-                sudo apt install default-jre -y
-                pip3 install selenium
-                export PATH=$PATH:some/path
-                python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
-                chromium-browser -version
-                chromedriver -version
-                jmeter -v
+          #       sudo apt-get upgrade -y
+          #       sudo apt-get install python3-pip -y
+          #       sudo apt-get install unzip -y
+          #       sudo apt-get install -y chromium-browser
+          #       sudo apt install default-jre -y
+          #       pip3 install selenium
+          #       export PATH=$PATH:some/path
+          #       python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
+          #       chromium-browser -version
+          #       chromedriver -version
+          #       jmeter -v
                 
           # - task: ExtractFiles@1
           #   inputs:
@@ -179,14 +182,14 @@ stages:
           #         sudo chmod 777 /var/logs/selenium/selenium_log.txt
           #         python3 Q3_v2.py
           #       fi
-          - task: Bash@3
-            displayName: 'Jmeter Test'
-            inputs:
-              targetType: 'inline'
-              workingDirectory: $(System.DefaultWorkingDirectory)
-              script: |
-                #! /bin/bash
+          # - task: Bash@3
+          #   displayName: 'Jmeter Test'
+          #   inputs:
+          #     targetType: 'inline'
+          #     workingDirectory: $(System.DefaultWorkingDirectory)
+          #     script: |
+          #       #! /bin/bash
 
-                cd /home/azureuser/azagent/_work/1/jmeter/apache-jmeter-5.4.1/bin
-                ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Stress_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_stress_test_results.csv
-                ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Endurance_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_endurance_test_results.csv
+          #       cd /home/azureuser/azagent/_work/1/jmeter/apache-jmeter-5.4.1/bin
+          #       ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Stress_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_stress_test_results.csv
+          #       ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Endurance_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_endurance_test_results.csv
