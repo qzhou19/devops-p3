@@ -102,21 +102,21 @@ stages:
 
 - stage:
   jobs:
-  - deployment: FakeRestAPI
-    pool:
-      vmImage: 'Ubuntu-18.04'
-    environment: 'TEST'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          # - task: AzureWebApp@1
-          #   displayName: 'Deploy Azure Web App'
-          #   inputs:
-          #     azureSubscription: 'myazuresub'
-          #     appName: 'qzapp-AppService'
-          #     appType: webApp
-          #     package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+  # - deployment: FakeRestAPI
+  #   pool:
+  #     vmImage: 'Ubuntu-18.04'
+  #   environment: 'TEST'
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - task: AzureWebApp@1
+  #           displayName: 'Deploy Azure Web App'
+  #           inputs:
+  #             azureSubscription: 'myazuresub'
+  #             appName: 'qzapp-AppService'
+  #             appType: webApp
+  #             package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
   - deployment: VMDeploy
     displayName: 'VM Deploy'
     environment:
