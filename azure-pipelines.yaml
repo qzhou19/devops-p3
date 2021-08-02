@@ -163,16 +163,16 @@ stages:
           #     destinationFolder: "$(Pipeline.Workspace)/jmeter"
           #     cleanDestinationFolder: true
           #     overwriteExistingFiles: true
-          - task: Bash@3
-            displayName: 'Selenium Test'
-            inputs:
-              targetType: 'inline'
-              workingDirectory: $(System.DefaultWorkingDirectory)
-              script: |
-                #! /bin/bash
+          # - task: Bash@3
+          #   displayName: 'Selenium Test'
+          #   inputs:
+          #     targetType: 'inline'
+          #     workingDirectory: $(System.DefaultWorkingDirectory)
+          #     script: |
+          #       #! /bin/bash
 
-                cd /home/azureuser/azagent/_work/1/selenium/
-                python3 Q3_v4.py
+          #       cd /home/azureuser/azagent/_work/1/selenium/
+          #       python3 Q3_v4.py
 
 
           # - task: PythonScript@0 
