@@ -108,7 +108,7 @@ stages:
   - deployment: FakeRestAPI
     pool:
       vmImage: 'Ubuntu-18.04'
-    environment: 'TEST'
+    environment: 'test'
     strategy:
       runOnce:
         deploy:
@@ -120,53 +120,53 @@ stages:
               appName: 'qzapp-AppService'
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
-          - task: JMeterInstaller@0
-            inputs:
-              jmeterVersion: '5.4.1'
+          # - task: JMeterInstaller@0
+          #   inputs:
+          #     jmeterVersion: '5.4.1'
 
-  - deployment: VMDeploy
-    displayName: 'VM Deploy'
-    environment:
-      name:  'TEST'
-      resourceType: VirtualMachine
-      # tags: 'TEST'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: Bash@3
-            displayName: 'Insatll and Check Packages'
-            inputs:
-              targetType: 'inline'
-              workingDirectory: $(System.DefaultWorkingDirectory)
-              script: |
-                #! /bin/bash
+  # - deployment: VMDeploy
+  #   displayName: 'VM Deploy'
+  #   environment:
+  #     name:  'TEST'
+  #     resourceType: VirtualMachine
+  #     # tags: 'TEST'
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - task: Bash@3
+  #           displayName: 'Insatll and Check Packages'
+  #           inputs:
+  #             targetType: 'inline'
+  #             workingDirectory: $(System.DefaultWorkingDirectory)
+  #             script: |
+  #               #! /bin/bash
                 
-                sudo apt-get upgrade -y
-                sudo apt-get install python3-pip -y
-                sudo apt-get install unzip -y
-                sudo apt-get install -y chromium-browser
-                sudo apt install default-jre -y
-                pip3 install selenium
-                export PATH=$PATH:some/path
-                python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
-                chromium-browser -version
-                chromedriver -version
+  #               sudo apt-get upgrade -y
+  #               sudo apt-get install python3-pip -y
+  #               sudo apt-get install unzip -y
+  #               sudo apt-get install -y chromium-browser
+  #               sudo apt install default-jre -y
+  #               pip3 install selenium
+  #               export PATH=$PATH:some/path
+  #               python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
+  #               chromium-browser -version
+  #               chromedriver -version
 
                 
-          - task: ExtractFiles@1
-            inputs:
-              archiveFilePatterns: "$(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium.zip"
-              destinationFolder: "$(Pipeline.Workspace)/selenium"
-              cleanDestinationFolder: true
-              overwriteExistingFiles: true
+          # - task: ExtractFiles@1
+          #   inputs:
+          #     archiveFilePatterns: "$(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium.zip"
+          #     destinationFolder: "$(Pipeline.Workspace)/selenium"
+          #     cleanDestinationFolder: true
+          #     overwriteExistingFiles: true
 
-          - task: ExtractFiles@1
-            inputs:
-              archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
-              destinationFolder: "$(Pipeline.Workspace)/jmeter"
-              cleanDestinationFolder: true
-              overwriteExistingFiles: true
+          # - task: ExtractFiles@1
+          #   inputs:
+          #     archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
+          #     destinationFolder: "$(Pipeline.Workspace)/jmeter"
+          #     cleanDestinationFolder: true
+          #     overwriteExistingFiles: true
 
           # - task: Bash@3
           #   displayName: 'Selenium Test'
