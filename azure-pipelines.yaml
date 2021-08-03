@@ -9,11 +9,11 @@ stages:
       name: Hosted Ubuntu 1604
     steps:
     # Needed for Terraform VM deployment
-    # - task: InstallSSHKey@0
-    #   displayName: 'Install SSH Key'
-    #   inputs:
-    #     knownHostsEntry: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
-    #     sshKeySecureFile: 'id_rsa'
+    - task: InstallSSHKey@0
+      displayName: 'Install SSH Key'
+      inputs:
+        knownHostsEntry: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
+        sshKeySecureFile: 'id_rsa'
     # - task: Npm@1
     #   inputs:
     #     command: 'install'
@@ -59,110 +59,114 @@ stages:
         environmentServiceNameAzureRM: 'myazuresub'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
-    - task: TerraformTaskV2@2
-      displayName: 'Terraform Destroy'
+    # - task: TerraformTaskV2@2
+    #   displayName: 'Terraform Destroy'
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'destroy'
+    #     environmentServiceNameAzureRM: 'myazuresub'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+
+    - task: ArchiveFiles@2
+      displayName: 'Archive FakeRestAPI'
       inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        environmentServiceNameAzureRM: 'myazuresub'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        rootFolderOrFile: 'fakerestapi'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+      displayName: 'Upload Package'
+      artifact: drop-fakerestapi
 
-    # - task: ArchiveFiles@2
-    #   displayName: 'Archive FakeRestAPI'
-    #   inputs:
-    #     rootFolderOrFile: 'fakerestapi'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-    #   displayName: 'Upload Package'
-    #   artifact: drop-fakerestapi
-    # - task: ArchiveFiles@2
-    #   displayName: 'Achive selenium files'
-    #   inputs:
-    #     rootFolderOrFile: 'selenium'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium.zip'
-    #     replaceExistingArchive: true
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium.zip
-    #   displayName: 'Upload selenium file'
-    #   artifact: drop-selenium
-    # - task: ArchiveFiles@2
-    #   displayName: 'Achive jmeter files'
-    #   inputs:
-    #     rootFolderOrFile: 'jmeter'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip'
-    #     replaceExistingArchive: true
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip
-    #   displayName: 'Upload jmeter file'
-    #   artifact: drop-jmeter
+    - task: ArchiveFiles@2
+      displayName: 'Achive selenium files'
+      inputs:
+        rootFolderOrFile: 'selenium'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium.zip'
+        replaceExistingArchive: true
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium.zip
+      displayName: 'Upload selenium file'
+      artifact: drop-selenium
 
-# - stage:
-#   jobs:
-#   - deployment: FakeRestAPI
-#     pool:
-#       vmImage: 'Ubuntu-18.04'
-#     environment: 'TEST'
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - task: AzureWebApp@1
-#             displayName: 'Deploy Azure Web App'
-#             inputs:
-#               azureSubscription: 'myazuresub'
-#               appName: 'qzapp-AppService'
-#               appType: webApp
-#               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+    - task: ArchiveFiles@2
+      displayName: 'Achive jmeter files'
+      inputs:
+        rootFolderOrFile: 'jmeter'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip'
+        replaceExistingArchive: true
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip
+      displayName: 'Upload jmeter file'
+      artifact: drop-jmeter
 
-  # - deployment: VMDeploy
-  #   displayName: 'VM Deploy'
-  #   environment:
-  #     name:  'TEST'
-  #     resourceType: VirtualMachine
-  #     # tags: 'TEST'
-  #   strategy:
-  #     runOnce:
-  #       deploy:
-  #         steps:
-          # - task: JMeterInstaller@0
-          #   inputs:
-          # #     jmeterVersion: '5.4.1'
-          # - task: Bash@3
-          #   displayName: 'Insatll and Check Packages'
-          #   inputs:
-          #     targetType: 'inline'
-          #     workingDirectory: $(System.DefaultWorkingDirectory)
-          #     script: |
-          #       #! /bin/bash
+- stage:
+  jobs:
+  - deployment: FakeRestAPI
+    pool:
+      vmImage: 'Ubuntu-18.04'
+    environment: 'TEST'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App'
+            inputs:
+              azureSubscription: 'myazuresub'
+              appName: 'qzapp-AppService'
+              appType: webApp
+              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+          - task: JMeterInstaller@0
+            inputs:
+              jmeterVersion: '5.4.1'
+
+  - deployment: VMDeploy
+    displayName: 'VM Deploy'
+    environment:
+      name:  'TEST'
+      resourceType: VirtualMachine
+      # tags: 'TEST'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: Bash@3
+            displayName: 'Insatll and Check Packages'
+            inputs:
+              targetType: 'inline'
+              workingDirectory: $(System.DefaultWorkingDirectory)
+              script: |
+                #! /bin/bash
                 
-          #       sudo apt-get upgrade -y
-          #       sudo apt-get install python3-pip -y
-          #       sudo apt-get install unzip -y
-          #       sudo apt-get install -y chromium-browser
-          #       sudo apt install default-jre -y
-          #       pip3 install selenium
-          #       export PATH=$PATH:some/path
-          #       python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
-          #       chromium-browser -version
-          #       chromedriver -version
-          #       jmeter -v
+                sudo apt-get upgrade -y
+                sudo apt-get install python3-pip -y
+                sudo apt-get install unzip -y
+                sudo apt-get install -y chromium-browser
+                sudo apt install default-jre -y
+                pip3 install selenium
+                export PATH=$PATH:some/path
+                python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
+                chromium-browser -version
+                chromedriver -version
+
                 
-          # - task: ExtractFiles@1
-          #   inputs:
-          #     archiveFilePatterns: "$(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium.zip"
-          #     destinationFolder: "$(Pipeline.Workspace)/selenium"
-          #     cleanDestinationFolder: true
-          #     overwriteExistingFiles: true
-          # - task: ExtractFiles@1
-          #   inputs:
-          #     archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
-          #     destinationFolder: "$(Pipeline.Workspace)/jmeter"
-          #     cleanDestinationFolder: true
-          #     overwriteExistingFiles: true
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: "$(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium.zip"
+              destinationFolder: "$(Pipeline.Workspace)/selenium"
+              cleanDestinationFolder: true
+              overwriteExistingFiles: true
+
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
+              destinationFolder: "$(Pipeline.Workspace)/jmeter"
+              cleanDestinationFolder: true
+              overwriteExistingFiles: true
+
           # - task: Bash@3
           #   displayName: 'Selenium Test'
           #   inputs:
