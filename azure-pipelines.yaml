@@ -91,17 +91,17 @@ stages:
     #   displayName: 'Upload selenium file'
     #   artifact: drop-selenium
 
-    # - task: ArchiveFiles@2
-    #   displayName: 'Achive jmeter files'
-    #   inputs:
-    #     rootFolderOrFile: 'jmeter'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip'
-    #     replaceExistingArchive: true
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip
-    #   displayName: 'Upload jmeter file'
-    #   artifact: drop-jmeter
+    - task: ArchiveFiles@2
+      displayName: 'Achive jmeter files'
+      inputs:
+        rootFolderOrFile: 'jmeter'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip'
+        replaceExistingArchive: true
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip
+      displayName: 'Upload jmeter file'
+      artifact: drop-jmeter
 
 - stage:
   jobs:
@@ -165,12 +165,12 @@ stages:
           #     cleanDestinationFolder: true
           #     overwriteExistingFiles: true
 
-          # - task: ExtractFiles@1
-          #   inputs:
-          #     archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
-          #     destinationFolder: "$(Pipeline.Workspace)/jmeter"
-          #     cleanDestinationFolder: true
-          #     overwriteExistingFiles: true
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
+              destinationFolder: "$(Pipeline.Workspace)/jmeter"
+              cleanDestinationFolder: true
+              overwriteExistingFiles: true
 
           # - task: Bash@3
           #   displayName: 'Selenium Test'
