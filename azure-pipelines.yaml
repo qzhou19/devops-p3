@@ -126,7 +126,7 @@ stages:
     environment:
       name:  'TEST'
       resourceType: VirtualMachine
-      # tags: 'TEST'
+
     strategy:
       runOnce:
         deploy:
