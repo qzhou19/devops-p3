@@ -172,16 +172,16 @@ stages:
           #     cleanDestinationFolder: true
           #     overwriteExistingFiles: true
 
-          - task: Bash@3
-            displayName: 'Selenium Test'
-            inputs:
-              targetType: 'inline'
-              workingDirectory: $(System.DefaultWorkingDirectory)
-              script: |
-                #! /bin/bash
+          # - task: Bash@3
+          #   displayName: 'Selenium Test'
+          #   inputs:
+          #     targetType: 'inline'
+          #     workingDirectory: $(System.DefaultWorkingDirectory)
+          #     script: |
+          #       #! /bin/bash
 
-                cd /home/azureuser/azagent/_work/1/selenium/
-                python3 Q3_v5.py
+          #       cd /home/azureuser/azagent/_work/1/selenium/
+          #       python3 Q3_v5.py
 
           - task: Bash@3
             displayName: 'Jmeter Test'
