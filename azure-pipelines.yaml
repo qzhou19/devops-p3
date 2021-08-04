@@ -149,9 +149,17 @@ stages:
                 sudo apt install default-jre -y
                 pip3 install selenium
                 export PATH=$PATH:some/path
+ 
+                wget https://chromedriver.storage.googleapis.com/91.0.4472.101/chromedriver_linux64.zip
+                unzip chromedriver_linux64.zip
+                sudo mv chromedriver -t /usr/bin
+                echo "Removing chromedriver_linux64.zip ..."
+                rm -rf chromedriver_linux64.zip
+
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
                 chromium-browser -version
                 chromedriver -version
+                jmeter -version
 
                 
           - task: ExtractFiles@1
