@@ -79,29 +79,29 @@ stages:
       displayName: 'Upload Package'
       artifact: drop-fakerestapi
 
-    - task: ArchiveFiles@2
-      displayName: 'Achive selenium files'
-      inputs:
-        rootFolderOrFile: 'selenium'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium.zip'
-        replaceExistingArchive: true
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium.zip
-      displayName: 'Upload selenium file'
-      artifact: drop-selenium
+    # - task: ArchiveFiles@2
+    #   displayName: 'Achive selenium files'
+    #   inputs:
+    #     rootFolderOrFile: 'selenium'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium.zip'
+    #     replaceExistingArchive: true
+    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium.zip
+    #   displayName: 'Upload selenium file'
+    #   artifact: drop-selenium
 
-    - task: ArchiveFiles@2
-      displayName: 'Achive jmeter files'
-      inputs:
-        rootFolderOrFile: 'jmeter'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip'
-        replaceExistingArchive: true
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip
-      displayName: 'Upload jmeter file'
-      artifact: drop-jmeter
+    # - task: ArchiveFiles@2
+    #   displayName: 'Achive jmeter files'
+    #   inputs:
+    #     rootFolderOrFile: 'jmeter'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip'
+    #     replaceExistingArchive: true
+    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter.zip
+    #   displayName: 'Upload jmeter file'
+    #   artifact: drop-jmeter
 
 - stage:
   jobs:
@@ -120,9 +120,6 @@ stages:
               appName: 'qzapp-AppService'
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
-          - task: JMeterInstaller@0
-            inputs:
-              jmeterVersion: '5.4.1'
 
   - deployment: VMDeploy
     displayName: 'VM Deploy'
@@ -150,41 +147,43 @@ stages:
                 pip3 install selenium
                 export PATH=$PATH:some/path
  
-                wget https://chromedriver.storage.googleapis.com/91.0.4472.101/chromedriver_linux64.zip
-                unzip chromedriver_linux64.zip
-                sudo mv chromedriver -t /usr/bin
-                echo "Removing chromedriver_linux64.zip ..."
-                rm -rf chromedriver_linux64.zip
+                # wget https://chromedriver.storage.googleapis.com/91.0.4472.101/chromedriver_linux64.zip
+                # unzip chromedriver_linux64.zip
+                # sudo mv chromedriver -t /usr/bin
+                # echo "Removing chromedriver_linux64.zip ..."
+                # rm -rf chromedriver_linux64.zip
 
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
                 chromium-browser -version
                 chromedriver -version
-
+          - task: JMeterInstaller@0
+            inputs:
+              jmeterVersion: '5.4.1'
                 
-          - task: ExtractFiles@1
-            inputs:
-              archiveFilePatterns: "$(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium.zip"
-              destinationFolder: "$(Pipeline.Workspace)/selenium"
-              cleanDestinationFolder: true
-              overwriteExistingFiles: true
-
-          - task: ExtractFiles@1
-            inputs:
-              archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
-              destinationFolder: "$(Pipeline.Workspace)/jmeter"
-              cleanDestinationFolder: true
-              overwriteExistingFiles: true
-
-          # - task: Bash@3
-          #   displayName: 'Selenium Test'
+          # - task: ExtractFiles@1
           #   inputs:
-          #     targetType: 'inline'
-          #     workingDirectory: $(System.DefaultWorkingDirectory)
-          #     script: |
-          #       #! /bin/bash
+          #     archiveFilePatterns: "$(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium.zip"
+          #     destinationFolder: "$(Pipeline.Workspace)/selenium"
+          #     cleanDestinationFolder: true
+          #     overwriteExistingFiles: true
 
-          #       cd /home/azureuser/azagent/_work/1/selenium/
-          #       python3 Q3_v4.py
+          # - task: ExtractFiles@1
+          #   inputs:
+          #     archiveFilePatterns: "$(Pipeline.Workspace)/drop-jmeter/$(Build.BuildId)-jmeter.zip"
+          #     destinationFolder: "$(Pipeline.Workspace)/jmeter"
+          #     cleanDestinationFolder: true
+          #     overwriteExistingFiles: true
+
+          - task: Bash@3
+            displayName: 'Selenium Test'
+            inputs:
+              targetType: 'inline'
+              workingDirectory: $(System.DefaultWorkingDirectory)
+              script: |
+                #! /bin/bash
+
+                cd /home/azureuser/azagent/_work/1/selenium/
+                python3 Q3_v5.py
 
 
           # - task: PythonScript@0 
