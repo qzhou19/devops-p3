@@ -154,11 +154,9 @@ stages:
                 # rm -rf chromedriver_linux64.zip
 
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
-                chromium-browser -version
-                chromedriver -version
-          - task: JMeterInstaller@0
-            inputs:
-              jmeterVersion: '5.4.1'
+                chromium-browser --version
+                chromedriver --version
+                jmeter --version
                 
           # - task: ExtractFiles@1
           #   inputs:
@@ -185,20 +183,14 @@ stages:
                 cd /home/azureuser/azagent/_work/1/selenium/
                 python3 Q3_v5.py
 
+          - task: Bash@3
+            displayName: 'Jmeter Test'
+            inputs:
+              targetType: 'inline'
+              workingDirectory: $(System.DefaultWorkingDirectory)
+              script: |
+                #! /bin/bash
 
-          # - task: PythonScript@0 
-          #   inputs:
-          #     scriptSource: 'filePath'
-          #     scriptPath: '/home/azureuser/azagent/_work/1/selenium/Q3_v4.py'
-          #     pythonInterpreter: '/usr/bin/python3'
-          # - task: Bash@3
-          #   displayName: 'Jmeter Test'
-          #   inputs:
-          #     targetType: 'inline'
-          #     workingDirectory: $(System.DefaultWorkingDirectory)
-          #     script: |
-          #       #! /bin/bash
-
-          #       cd /home/azureuser/azagent/_work/1/jmeter/apache-jmeter-5.4.1/bin
-          #       ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Stress_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_stress_test_results.csv.csv
-          #       ./jmeter.sh -n -t /home/azureuser/azagent/_work/1/jmeter/Endurance_Test.jmx -l /home/azureuser/azagent/_work/1/jmeter/Q3_endurance_test_results.csv
+                cd /home/azureuser/azagent/_work/1/jmeter/
+                jmeter -n -t Stress_Test.jmx -l stress_out.csv
+                jmeter -n -t Endurance_Test.jmx -l endurance_out.csv
