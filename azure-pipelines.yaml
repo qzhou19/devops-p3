@@ -159,7 +159,6 @@ stages:
                 python3 -c "import selenium; print('Selenium location:', selenium.__file__)"
                 chromium-browser -version
                 chromedriver -version
-                jmeter -version
 
                 
           - task: ExtractFiles@1
